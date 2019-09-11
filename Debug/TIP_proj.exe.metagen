@@ -1,5 +1,4 @@
   TIPproj.LoginWindow.resources - Embedded, ContainedInManifestFile, 
-  TIPproj.MainWindow.resources - Embedded, ContainedInManifestFile, 
 ImageRuntimeVersion: v4.0.30319
 Assembly TIP_proj, Version=0.0.*, Culture=Invariant Language (Invariant Country): 
 	hash=SHA1, flags=PublicKey
@@ -15,11 +14,13 @@ Assembly System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=
 	hash=None, flags=None
 Assembly System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089: 
 	hash=None, flags=None
-Class TIPproj.MainWindow: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
-  :System.Windows.Forms.Form
-    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
-  Methods:
-    StartApplication(basic_string<char\,std::char_traits<char>\,std::allocator<char> >*, basic_string<char\,std::char_traits<char>\,std::allocator<char> >*, basic_string<char\,std::char_traits<char>\,std::allocator<char> >*): PrivateScope, Public, HideBySig
 Class TIPproj.LoginWindow: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
   :System.Windows.Forms.Form
     Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Methods:
+    AppInit(): PrivateScope, Public, HideBySig
+    AppRegister(): PrivateScope, Public, HideBySig
+    AppMakeCall(): PrivateScope, Public, HideBySig
+    AppMakeHangup(): PrivateScope, Public, HideBySig
+    RegisteredCallback(): PrivateScope, Public, HideBySig
+    UnregisteredCallback(): PrivateScope, Public, HideBySig

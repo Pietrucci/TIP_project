@@ -137,22 +137,19 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="LoginWindow.cpp" />
-    <ClCompile Include="MainWindow.cpp" />
+    <ClCompile Include="MyAccount.cpp" />
+    <ClCompile Include="MyCall.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LoginWindow.h">
       <FileType>CppForm</FileType>
     </ClInclude>
-    <ClInclude Include="MainWindow.h">
-      <FileType>CppForm</FileType>
-    </ClInclude>
+    <ClInclude Include="MyAccount.h" />
+    <ClInclude Include="MyCall.h" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="LoginWindow.resx">
       <DependentUpon>LoginWindow.h</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="MainWindow.resx">
-      <DependentUpon>MainWindow.h</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
