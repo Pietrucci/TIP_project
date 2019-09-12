@@ -33,7 +33,9 @@ namespace TIPproj {
 
 	private: Endpoint& ep = Endpoint::instance();
 	private: MyAccount* acc;
-	private: MyCall* active_call;
+	private: System::Windows::Forms::Button^ deafen_button;
+	private: System::Windows::Forms::Button^ mute_button;
+	private: System::Windows::Forms::Button^ hold_button;
 
 	protected: ~LoginWindow()
 	{
@@ -86,6 +88,9 @@ namespace TIPproj {
 				 this->connect_buton = (gcnew System::Windows::Forms::Button());
 				 this->connection_status_label = (gcnew System::Windows::Forms::Label());
 				 this->connected_group = (gcnew System::Windows::Forms::GroupBox());
+				 this->hold_button = (gcnew System::Windows::Forms::Button());
+				 this->deafen_button = (gcnew System::Windows::Forms::Button());
+				 this->mute_button = (gcnew System::Windows::Forms::Button());
 				 this->buddies_label = (gcnew System::Windows::Forms::Label());
 				 this->add_buddy_button = (gcnew System::Windows::Forms::Button());
 				 this->buddy_tree = (gcnew System::Windows::Forms::TreeView());
@@ -134,7 +139,6 @@ namespace TIPproj {
 				 this->server_label->Size = System::Drawing::Size(78, 13);
 				 this->server_label->TabIndex = 1;
 				 this->server_label->Text = L"Server address";
-				 this->server_label->Click += gcnew System::EventHandler(this, &LoginWindow::Server_label_Click);
 				 // 
 				 // number_label
 				 // 
@@ -198,6 +202,9 @@ namespace TIPproj {
 				 // 
 				 // connected_group
 				 // 
+				 this->connected_group->Controls->Add(this->hold_button);
+				 this->connected_group->Controls->Add(this->deafen_button);
+				 this->connected_group->Controls->Add(this->mute_button);
 				 this->connected_group->Controls->Add(this->buddies_label);
 				 this->connected_group->Controls->Add(this->add_buddy_button);
 				 this->connected_group->Controls->Add(this->buddy_tree);
@@ -211,6 +218,36 @@ namespace TIPproj {
 				 this->connected_group->TabStop = false;
 				 this->connected_group->Visible = false;
 				 // 
+				 // hold_button
+				 // 
+				 this->hold_button->Location = System::Drawing::Point(85, 89);
+				 this->hold_button->Name = L"hold_button";
+				 this->hold_button->Size = System::Drawing::Size(57, 48);
+				 this->hold_button->TabIndex = 8;
+				 this->hold_button->Text = L"Hold";
+				 this->hold_button->UseVisualStyleBackColor = true;
+				 this->hold_button->Click += gcnew System::EventHandler(this, &LoginWindow::Hold_button_Click);
+				 // 
+				 // deafen_button
+				 // 
+				 this->deafen_button->Location = System::Drawing::Point(85, 314);
+				 this->deafen_button->Name = L"deafen_button";
+				 this->deafen_button->Size = System::Drawing::Size(57, 47);
+				 this->deafen_button->TabIndex = 7;
+				 this->deafen_button->Text = L"Deafen";
+				 this->deafen_button->UseVisualStyleBackColor = true;
+				 this->deafen_button->Click += gcnew System::EventHandler(this, &LoginWindow::Deafen_button_Click);
+				 // 
+				 // mute_button
+				 // 
+				 this->mute_button->Location = System::Drawing::Point(22, 314);
+				 this->mute_button->Name = L"mute_button";
+				 this->mute_button->Size = System::Drawing::Size(57, 47);
+				 this->mute_button->TabIndex = 6;
+				 this->mute_button->Text = L"Mute";
+				 this->mute_button->UseVisualStyleBackColor = true;
+				 this->mute_button->Click += gcnew System::EventHandler(this, &LoginWindow::Mute_button_Click);
+				 // 
 				 // buddies_label
 				 // 
 				 this->buddies_label->AutoSize = true;
@@ -222,9 +259,9 @@ namespace TIPproj {
 				 // 
 				 // add_buddy_button
 				 // 
-				 this->add_buddy_button->Location = System::Drawing::Point(148, 89);
+				 this->add_buddy_button->Location = System::Drawing::Point(528, 335);
 				 this->add_buddy_button->Name = L"add_buddy_button";
-				 this->add_buddy_button->Size = System::Drawing::Size(53, 47);
+				 this->add_buddy_button->Size = System::Drawing::Size(127, 26);
 				 this->add_buddy_button->TabIndex = 4;
 				 this->add_buddy_button->Text = L"Add buddy";
 				 this->add_buddy_button->UseVisualStyleBackColor = true;
@@ -237,7 +274,7 @@ namespace TIPproj {
 				 this->buddy_tree->ShowLines = false;
 				 this->buddy_tree->ShowPlusMinus = false;
 				 this->buddy_tree->ShowRootLines = false;
-				 this->buddy_tree->Size = System::Drawing::Size(127, 311);
+				 this->buddy_tree->Size = System::Drawing::Size(127, 279);
 				 this->buddy_tree->TabIndex = 3;
 				 // 
 				 // dialer_textbox
@@ -247,19 +284,19 @@ namespace TIPproj {
 				 this->dialer_textbox->Location = System::Drawing::Point(22, 34);
 				 this->dialer_textbox->MaxLength = 32;
 				 this->dialer_textbox->Name = L"dialer_textbox";
-				 this->dialer_textbox->Size = System::Drawing::Size(179, 38);
+				 this->dialer_textbox->Size = System::Drawing::Size(183, 38);
 				 this->dialer_textbox->TabIndex = 2;
 				 this->dialer_textbox->Text = L"8222";
 				 // 
 				 // hangup_button
 				 // 
-				 this->hangup_button->Location = System::Drawing::Point(85, 89);
+				 this->hangup_button->Location = System::Drawing::Point(148, 90);
 				 this->hangup_button->Name = L"hangup_button";
 				 this->hangup_button->Size = System::Drawing::Size(57, 47);
 				 this->hangup_button->TabIndex = 1;
 				 this->hangup_button->Text = L"Hangup";
 				 this->hangup_button->UseVisualStyleBackColor = true;
-				 this->hangup_button->Click += gcnew System::EventHandler(this, &LoginWindow::Button2_Click);
+				 this->hangup_button->Click += gcnew System::EventHandler(this, &LoginWindow::Hangup_button_Click);
 				 // 
 				 // call_button
 				 // 
@@ -303,8 +340,7 @@ namespace TIPproj {
 	}
 	private: System::Void Server_textbox_TextChanged(System::Object^ sender, System::EventArgs^ e) {
 	}
-	private: System::Void Server_label_Click(System::Object^ sender, System::EventArgs^ e) {
-	}
+
 	private: System::Void Connect_buton_Click(System::Object^ sender, System::EventArgs^ e) {
 
 		if (connect_buton->Text == "Connect") {
@@ -334,7 +370,7 @@ namespace TIPproj {
 		ep.transportCreate(PJSIP_TRANSPORT_UDP, tcfg);
 		ep.libStart();
 	}
-	typedef std::function<bool(int)> FunctionPtr;
+			typedef std::function<bool(int)> FunctionPtr;
 
 	public: void AppRegister() {
 		connection_status_label->Text = "Connecting...";
@@ -342,7 +378,7 @@ namespace TIPproj {
 		string server = msclr::interop::marshal_as<std::string>(server_textbox->Text);
 		string number = msclr::interop::marshal_as<std::string>(number_textbox->Text);
 		string password = msclr::interop::marshal_as<std::string>(password_textbox->Text);
-
+		password_textbox->Text = "";
 		AccountConfig acc_cfg;
 		acc_cfg.idUri = "sip:" + number + "@" + server;
 		acc_cfg.regConfig.registrarUri = "sip:" + server;
@@ -375,11 +411,11 @@ namespace TIPproj {
 		string server = msclr::interop::marshal_as<std::string>(server_textbox->Text);
 		string dial_number = msclr::interop::marshal_as<std::string>(dialer_textbox->Text);
 
-		active_call = new MyCall(*acc);
+		acc->active_call = new MyCall(*acc);
 		CallOpParam prm(true);
 		prm.opt.audioCount = 1;
 		prm.opt.videoCount = 0;
-		active_call->makeCall("sip:" + dial_number + "@" + server, prm);
+		acc->active_call->makeCall("sip:" + dial_number + "@" + server, prm);
 
 	}
 	public: void AppMakeHangup() {
@@ -428,25 +464,23 @@ namespace TIPproj {
 	private: void ApplicationDisonnect() {
 		//need to delete all buddies here
 		ep.hangupAllCalls();
+		for (auto b : acc->buddies) {
+			b->~Buddy();
+			delete b;
+		}
+		buddy_tree->Nodes->Clear();
 		acc->shutdown();
+		delete acc;
 		connection_status_label->Text = "Disconnected";
 		connection_status_label->ForeColor = Color::Red;
 		connected_group->Visible = false;
 
 	}
-	private: System::Void Button2_Click(System::Object^ sender, System::EventArgs^ e) {
+	private: System::Void Hangup_button_Click(System::Object^ sender, System::EventArgs^ e) {
 		AppMakeHangup();
 	}
 	private: System::Void Call_button_Click(System::Object^ sender, System::EventArgs^ e) {
 		AppMakeCall();
-	}
-
-	public: void RegisteredCallback() {
-		std::cout << "test";
-	}
-
-	public: void UnregisteredCallback() {
-
 	}
 
 	private: System::Void Call_Click(System::Object^ sender, System::EventArgs^ e) {
@@ -454,8 +488,10 @@ namespace TIPproj {
 		Windows::Forms::ContextMenuStrip^ menu_strip = (Windows::Forms::ContextMenuStrip^)sen->GetCurrentParent();
 		TreeView^ tree_view = (TreeView^)menu_strip->SourceControl;
 		TreeNode^ selected_node = tree_view->SelectedNode;
-		dialer_textbox->Text = selected_node->Text;
-		AppMakeCall();
+		if (selected_node) {
+			dialer_textbox->Text = selected_node->Text;
+			AppMakeCall();
+		}
 	}
 
 	private: System::Void Remove_Click(System::Object^ sender, System::EventArgs^ e) {
@@ -469,10 +505,93 @@ namespace TIPproj {
 		}
 	}
 	private: System::Void Add_buddy_button_Click(System::Object^ sender, System::EventArgs^ e) {
-		TreeNode^ new_node = gcnew TreeNode(dialer_textbox->Text);
-		new_node->ContextMenuStrip = buddy_context_menu;
-		buddy_tree->Nodes->Add(new_node);
-		AppAddBuddy(new_node->Text);
+		if (dialer_textbox->Text != "") {
+			TreeNode^ new_node = gcnew TreeNode(dialer_textbox->Text);
+			new_node->ContextMenuStrip = buddy_context_menu;
+			buddy_tree->Nodes->Add(new_node);
+			AppAddBuddy(new_node->Text);
+		}
+	}
+	private: System::Void Mute_button_Click(System::Object^ sender, System::EventArgs^ e) {
+		MyCall* call = acc->active_call;
+		if (call) {
+			if (call->isMuted) {
+				try {
+					call->aud_med.adjustRxLevel(1.0);
+				}
+				catch (...) {
+
+				}
+				finally{
+				call->isMuted = false;
+				mute_button->FlatStyle = FlatStyle::Standard;
+				}
+			}
+			else {
+				try {
+					call->aud_med.adjustRxLevel(0.0);
+				}
+				catch (...) {
+
+				}
+				finally{
+				call->isMuted = true;
+				mute_button->FlatStyle = FlatStyle::Flat;
+				}
+
+			}
+
+		}
+	}
+	private: System::Void Deafen_button_Click(System::Object^ sender, System::EventArgs^ e) {
+		MyCall* call = acc->active_call;
+		if (call) {
+			if (call->isDeafened) {
+				call->aud_med.adjustTxLevel(1.0);
+				call->isDeafened = false;
+				deafen_button->FlatStyle = FlatStyle::Standard;
+
+			}
+			else {
+				call->aud_med.adjustTxLevel(0.0);
+				call->isDeafened = true;
+				deafen_button->FlatStyle = FlatStyle::Flat;
+
+			}
+		}
+	}
+	private: System::Void Hold_button_Click(System::Object^ sender, System::EventArgs^ e) {
+		MyCall* call = acc->active_call;
+		if (call) {
+			CallOpParam prm(true);
+
+			if (call->isHold) {
+				prm.opt.audioCount = 1;
+				prm.opt.audioCount = 0;
+				prm.opt.flag = pjsua_call_flag::PJSUA_CALL_UNHOLD;
+				try {
+					call->reinvite(prm);
+				}
+				catch (...) {
+
+				}
+				finally{
+				call->isHold = false;
+				}
+			}
+			else {
+				try {
+					call->setHold(prm);
+				}
+				catch (...) {
+
+				}
+				finally{
+				call->isHold = true;
+				}
+
+			}
+		}
 	}
 	};
 

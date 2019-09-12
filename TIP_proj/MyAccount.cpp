@@ -4,27 +4,10 @@ using namespace System::Windows::Forms;
 
 MyAccount::~MyAccount()
 {
-	std::cout << "*** Account is being deleted: No of calls="
-		<< calls.size() << std::endl;
-
-	for (std::vector<Call*>::iterator it = calls.begin();
-		it != calls.end(); )
-	{
-		delete (*it);
-		it = calls.erase(it);
-	}
 }
 
 void MyAccount::removeCall(Call* call)
 {
-	for (std::vector<Call*>::iterator it = calls.begin();
-		it != calls.end(); ++it)
-	{
-		if (*it == call) {
-			calls.erase(it);
-			break;
-		}
-	}
 }
 
 void MyAccount::onRegState(OnRegStateParam& prm)
@@ -36,16 +19,17 @@ void MyAccount::onRegState(OnRegStateParam& prm)
 
 void MyAccount::onIncomingCall(OnIncomingCallParam& iprm)
 {
-	Call* call = new MyCall(*this, iprm.callId);
+	MyCall* call = new MyCall(*this, iprm.callId);
 	CallInfo ci = call->getInfo();
 	CallOpParam prm;
 	std::string s = "Answer " + ci.remoteUri + "?";
 	System::String^ remUri = gcnew System::String(s.c_str());
 	if (MessageBox::Show(remUri, "Incoming call", MessageBoxButtons::YesNo, MessageBoxIcon::Question) == DialogResult::Yes)
 	{
-		calls.push_back(call);
+		//calls.push_back(call);
+		active_call = call;
 		prm.statusCode = (pjsip_status_code)200;
-		call->answer(prm);
+		active_call->answer(prm);
 	}
 	else
 	{

@@ -9,8 +9,9 @@ typedef std::function<void()> FunctionPtr;
 class MyAccount : public Account
 {
 public:
-	std::vector<Call*> calls;
 	std::vector<Buddy*> buddies;
+	MyCall* active_call;
+
 public:
 	~MyAccount();
 

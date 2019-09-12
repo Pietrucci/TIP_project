@@ -26,5 +26,3 @@ Class TIPproj.LoginWindow: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
     AppMakeHangup(): PrivateScope, Public, HideBySig
     AppAddBuddy(String): PrivateScope, Public, HideBySig
     AppRemoveBuddy(String): PrivateScope, Public, HideBySig
-    RegisteredCallback(): PrivateScope, Public, HideBySig
-    UnregisteredCallback(): PrivateScope, Public, HideBySig
