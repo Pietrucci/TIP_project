@@ -1,7 +1,5 @@
 #include "MyAccount.h"
 #include "LoginWindow.h"
-MyAccount::MyAccount()
-{}
 using namespace System::Windows::Forms;
 
 MyAccount::~MyAccount()
@@ -34,7 +32,6 @@ void MyAccount::onRegState(OnRegStateParam& prm)
 	AccountInfo ai = getInfo();
 	std::cout << (ai.regIsActive ? "*** Register: code=" : "*** Unregister: code=")
 		<< prm.code << std::endl;
-
 }
 
 void MyAccount::onIncomingCall(OnIncomingCallParam& iprm)

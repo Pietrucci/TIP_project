@@ -1,5 +1,4 @@
 #include <windows.h>
-
 #include "LoginWindow.h"
 #include <iostream>
 #include <pjsua2.hpp>

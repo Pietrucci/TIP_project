@@ -138,6 +138,7 @@
   <ItemGroup>
     <ClCompile Include="LoginWindow.cpp" />
     <ClCompile Include="MyAccount.cpp" />
+    <ClCompile Include="MyBuddy.cpp" />
     <ClCompile Include="MyCall.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -145,6 +146,7 @@
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="MyAccount.h" />
+    <ClInclude Include="MyBuddy.h" />
     <ClInclude Include="MyCall.h" />
   </ItemGroup>
   <ItemGroup>

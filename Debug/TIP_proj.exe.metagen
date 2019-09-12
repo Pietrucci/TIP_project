@@ -17,10 +17,14 @@ Assembly System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c5619
 Class TIPproj.LoginWindow: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
   :System.Windows.Forms.Form
     Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Fields:
+    System.Windows.Forms.TextBox server_textbox : Public
   Methods:
     AppInit(): PrivateScope, Public, HideBySig
     AppRegister(): PrivateScope, Public, HideBySig
     AppMakeCall(): PrivateScope, Public, HideBySig
     AppMakeHangup(): PrivateScope, Public, HideBySig
+    AppAddBuddy(String): PrivateScope, Public, HideBySig
+    AppRemoveBuddy(String): PrivateScope, Public, HideBySig
     RegisteredCallback(): PrivateScope, Public, HideBySig
     UnregisteredCallback(): PrivateScope, Public, HideBySig

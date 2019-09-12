@@ -24,6 +24,9 @@
     <ClInclude Include="MyCall.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MyBuddy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="LoginWindow.cpp">
@@ -33,6 +36,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MyCall.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MyBuddy.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

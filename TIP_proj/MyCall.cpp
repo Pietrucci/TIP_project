@@ -24,7 +24,6 @@ void MyCall::onCallMediaState(OnCallMediaStateParam& prm)
 {
 	PJ_UNUSED_ARG(prm);
 
-	unsigned i;
 	CallInfo ci = getInfo();
 	AudioMedia aud_med;
 	AudioMedia& play_dev_med =
