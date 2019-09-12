@@ -26,7 +26,6 @@ void MyAccount::onIncomingCall(OnIncomingCallParam& iprm)
 	System::String^ remUri = gcnew System::String(s.c_str());
 	if (MessageBox::Show(remUri, "Incoming call", MessageBoxButtons::YesNo, MessageBoxIcon::Question) == DialogResult::Yes)
 	{
-		//calls.push_back(call);
 		active_call = call;
 		prm.statusCode = (pjsip_status_code)200;
 		active_call->answer(prm);
@@ -34,7 +33,7 @@ void MyAccount::onIncomingCall(OnIncomingCallParam& iprm)
 	else
 	{
 		prm.statusCode = PJSIP_SC_DECLINE;
-
+		call->answer(prm);
 		call->hangup(prm);
 		delete call;
 	}

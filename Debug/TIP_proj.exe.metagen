@@ -19,6 +19,7 @@ Class TIPproj.LoginWindow: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
     Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
   Fields:
     System.Windows.Forms.TextBox server_textbox : Public
+    System.Windows.Forms.TreeView buddy_tree : Public
   Methods:
     AppInit(): PrivateScope, Public, HideBySig
     AppRegister(): PrivateScope, Public, HideBySig
