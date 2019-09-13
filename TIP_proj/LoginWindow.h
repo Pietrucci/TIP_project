@@ -140,10 +140,10 @@ namespace TIPproj {
 				 this->dialer_textbox = (gcnew System::Windows::Forms::TextBox());
 				 this->hangup_button = (gcnew System::Windows::Forms::Button());
 				 this->call_button = (gcnew System::Windows::Forms::Button());
-				 this->BuddyPollTimer = (gcnew Timer());
 				 this->buddy_context_menu->SuspendLayout();
 				 this->connected_group->SuspendLayout();
 				 this->SuspendLayout();
+				 this->BuddyPollTimer = (gcnew Timer());
 				 // 
 				 // buddy_context_menu
 				 // 
@@ -172,7 +172,7 @@ namespace TIPproj {
 				 this->server_textbox->Name = L"server_textbox";
 				 this->server_textbox->Size = System::Drawing::Size(100, 20);
 				 this->server_textbox->TabIndex = 0;
-				 this->server_textbox->Text = L"10.0.0.136:5160";
+				 this->server_textbox->Text = L"192.168.43.21:5160";
 				 this->server_textbox->TextChanged += gcnew System::EventHandler(this, &LoginWindow::Server_textbox_TextChanged);
 				 // 
 				 // server_label
@@ -938,13 +938,22 @@ void TIPproj::LoginWindow::PollBuddies(System::Object^ sender, System::EventArgs
 	if (acc) {
 		for (auto buddy : acc->buddies) {
 			auto info = buddy->getInfo();
+			std::string server = msclr::interop::marshal_as<std::string>(server_textbox->Text);
 			if (info.presStatus.status == PJSUA_BUDDY_STATUS_ONLINE) {
-				auto x = buddy_tree->Nodes;
-
+				for each (TreeNode ^ node in buddy_tree->Nodes) {
+					std::string temp = msclr::interop::marshal_as<std::string>(node->Text);
+					if ("sip:" + temp + "@" + server == info.uri) {
+						node->ForeColor = Color::Green;
+					}
+				}
 			}
 			else if (info.presStatus.status == PJSUA_BUDDY_STATUS_OFFLINE) {
-				auto x = buddy_tree->Nodes;
-
+				for each (TreeNode ^ node in buddy_tree->Nodes) {
+					std::string temp = msclr::interop::marshal_as<std::string>(node->Text);
+					if ("sip:" + temp + "@" + server == info.uri) {
+						node->ForeColor = Color::Black;
+					}
+				}
 			}
 		}
 	}
