@@ -36,11 +36,12 @@ namespace TIPproj {
 
 	private: Endpoint& ep = Endpoint::instance();
 	private: MyAccount* acc;
-	private: Timer^ BuddyPollTimer;
+	private: System::Windows::Forms::Timer^ BuddyPollTimer;
+
 
 	private: System::Windows::Forms::Button^ deafen_button;
 	private: System::Windows::Forms::Button^ mute_button;
-	private: System::Windows::Forms::CheckBox^ status_checkbox;
+
 	private: System::Windows::Forms::Button^ digit1_button;
 	private: System::Windows::Forms::Button^ digit_hash_button;
 
@@ -64,6 +65,9 @@ namespace TIPproj {
 	private: System::Windows::Forms::Button^ digit3_button;
 
 	private: System::Windows::Forms::Button^ digit2_button;
+	private: System::Windows::Forms::GroupBox^ active_call_box;
+	private: System::Windows::Forms::Label^ active_caller_id_label;
+	private: System::Windows::Forms::Label^ call_time_label;
 
 	private: System::Windows::Forms::Button^ hold_button;
 
@@ -118,6 +122,11 @@ namespace TIPproj {
 				 this->connect_buton = (gcnew System::Windows::Forms::Button());
 				 this->connection_status_label = (gcnew System::Windows::Forms::Label());
 				 this->connected_group = (gcnew System::Windows::Forms::GroupBox());
+				 this->active_call_box = (gcnew System::Windows::Forms::GroupBox());
+				 this->active_caller_id_label = (gcnew System::Windows::Forms::Label());
+				 this->call_time_label = (gcnew System::Windows::Forms::Label());
+				 this->mute_button = (gcnew System::Windows::Forms::Button());
+				 this->deafen_button = (gcnew System::Windows::Forms::Button());
 				 this->digit_hash_button = (gcnew System::Windows::Forms::Button());
 				 this->digit0_button = (gcnew System::Windows::Forms::Button());
 				 this->digit_asterisk_button = (gcnew System::Windows::Forms::Button());
@@ -130,20 +139,18 @@ namespace TIPproj {
 				 this->digit3_button = (gcnew System::Windows::Forms::Button());
 				 this->digit2_button = (gcnew System::Windows::Forms::Button());
 				 this->digit1_button = (gcnew System::Windows::Forms::Button());
-				 this->status_checkbox = (gcnew System::Windows::Forms::CheckBox());
 				 this->hold_button = (gcnew System::Windows::Forms::Button());
-				 this->deafen_button = (gcnew System::Windows::Forms::Button());
-				 this->mute_button = (gcnew System::Windows::Forms::Button());
 				 this->buddies_label = (gcnew System::Windows::Forms::Label());
 				 this->add_buddy_button = (gcnew System::Windows::Forms::Button());
 				 this->buddy_tree = (gcnew System::Windows::Forms::TreeView());
 				 this->dialer_textbox = (gcnew System::Windows::Forms::TextBox());
 				 this->hangup_button = (gcnew System::Windows::Forms::Button());
 				 this->call_button = (gcnew System::Windows::Forms::Button());
+				 this->BuddyPollTimer = (gcnew System::Windows::Forms::Timer(this->components));
 				 this->buddy_context_menu->SuspendLayout();
 				 this->connected_group->SuspendLayout();
+				 this->active_call_box->SuspendLayout();
 				 this->SuspendLayout();
-				 this->BuddyPollTimer = (gcnew Timer());
 				 // 
 				 // buddy_context_menu
 				 // 
@@ -246,6 +253,7 @@ namespace TIPproj {
 				 // 
 				 // connected_group
 				 // 
+				 this->connected_group->Controls->Add(this->active_call_box);
 				 this->connected_group->Controls->Add(this->digit_hash_button);
 				 this->connected_group->Controls->Add(this->digit0_button);
 				 this->connected_group->Controls->Add(this->digit_asterisk_button);
@@ -258,10 +266,7 @@ namespace TIPproj {
 				 this->connected_group->Controls->Add(this->digit3_button);
 				 this->connected_group->Controls->Add(this->digit2_button);
 				 this->connected_group->Controls->Add(this->digit1_button);
-				 this->connected_group->Controls->Add(this->status_checkbox);
 				 this->connected_group->Controls->Add(this->hold_button);
-				 this->connected_group->Controls->Add(this->deafen_button);
-				 this->connected_group->Controls->Add(this->mute_button);
 				 this->connected_group->Controls->Add(this->buddies_label);
 				 this->connected_group->Controls->Add(this->add_buddy_button);
 				 this->connected_group->Controls->Add(this->buddy_tree);
@@ -274,6 +279,68 @@ namespace TIPproj {
 				 this->connected_group->TabIndex = 9;
 				 this->connected_group->TabStop = false;
 				 this->connected_group->Visible = false;
+				 // 
+				 // active_call_box
+				 // 
+				 this->active_call_box->Controls->Add(this->active_caller_id_label);
+				 this->active_call_box->Controls->Add(this->call_time_label);
+				 this->active_call_box->Controls->Add(this->mute_button);
+				 this->active_call_box->Controls->Add(this->deafen_button);
+				 this->active_call_box->Location = System::Drawing::Point(172, 19);
+				 this->active_call_box->Name = L"active_call_box";
+				 this->active_call_box->Size = System::Drawing::Size(186, 180);
+				 this->active_call_box->TabIndex = 22;
+				 this->active_call_box->TabStop = false;
+				 this->active_call_box->Visible = false;
+				 // 
+				 // active_caller_id_label
+				 // 
+				 this->active_caller_id_label->Location = System::Drawing::Point(6, 65);
+				 this->active_caller_id_label->Name = L"active_caller_id_label";
+				 this->active_caller_id_label->Size = System::Drawing::Size(174, 20);
+				 this->active_caller_id_label->TabIndex = 1;
+				 this->active_caller_id_label->Text = L"NoCall";
+				 this->active_caller_id_label->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
+				 // 
+				 // call_time_label
+				 // 
+				 this->call_time_label->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom)
+					 | System::Windows::Forms::AnchorStyles::Left)
+					 | System::Windows::Forms::AnchorStyles::Right));
+				 this->call_time_label->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 26.25F, System::Drawing::FontStyle::Regular,
+					 System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(238)));
+				 this->call_time_label->Location = System::Drawing::Point(6, 12);
+				 this->call_time_label->Name = L"call_time_label";
+				 this->call_time_label->Size = System::Drawing::Size(174, 39);
+				 this->call_time_label->TabIndex = 0;
+				 this->call_time_label->Text = L"Calling...";
+				 this->call_time_label->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
+				 this->call_time_label->Click += gcnew System::EventHandler(this, &LoginWindow::Call_time_label_Click);
+				 // 
+				 // mute_button
+				 // 
+				 this->mute_button->FlatAppearance->BorderSize = 0;
+				 this->mute_button->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+				 this->mute_button->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"mute_button.Image")));
+				 this->mute_button->Location = System::Drawing::Point(48, 133);
+				 this->mute_button->Name = L"mute_button";
+				 this->mute_button->Size = System::Drawing::Size(41, 41);
+				 this->mute_button->TabIndex = 6;
+				 this->mute_button->TextAlign = System::Drawing::ContentAlignment::MiddleRight;
+				 this->mute_button->UseVisualStyleBackColor = true;
+				 this->mute_button->Click += gcnew System::EventHandler(this, &LoginWindow::Mute_button_Click);
+				 // 
+				 // deafen_button
+				 // 
+				 this->deafen_button->FlatAppearance->BorderSize = 0;
+				 this->deafen_button->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+				 this->deafen_button->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"deafen_button.Image")));
+				 this->deafen_button->Location = System::Drawing::Point(96, 133);
+				 this->deafen_button->Name = L"deafen_button";
+				 this->deafen_button->Size = System::Drawing::Size(41, 41);
+				 this->deafen_button->TabIndex = 7;
+				 this->deafen_button->UseVisualStyleBackColor = true;
+				 this->deafen_button->Click += gcnew System::EventHandler(this, &LoginWindow::Deafen_button_Click);
 				 // 
 				 // digit_hash_button
 				 // 
@@ -467,18 +534,6 @@ namespace TIPproj {
 				 this->digit1_button->UseVisualStyleBackColor = true;
 				 this->digit1_button->Click += gcnew System::EventHandler(this, &LoginWindow::Digit1_button_Click);
 				 // 
-				 // status_checkbox
-				 // 
-				 this->status_checkbox->Appearance = System::Windows::Forms::Appearance::Button;
-				 this->status_checkbox->AutoSize = true;
-				 this->status_checkbox->Location = System::Drawing::Point(447, 16);
-				 this->status_checkbox->Name = L"status_checkbox";
-				 this->status_checkbox->Size = System::Drawing::Size(47, 23);
-				 this->status_checkbox->TabIndex = 9;
-				 this->status_checkbox->Text = L"Online";
-				 this->status_checkbox->UseVisualStyleBackColor = true;
-				 this->status_checkbox->CheckedChanged += gcnew System::EventHandler(this, &LoginWindow::Status_checkbox_CheckedChanged);
-				 // 
 				 // hold_button
 				 // 
 				 this->hold_button->FlatAppearance->BorderSize = 0;
@@ -490,31 +545,6 @@ namespace TIPproj {
 				 this->hold_button->TabIndex = 8;
 				 this->hold_button->UseVisualStyleBackColor = false;
 				 this->hold_button->Click += gcnew System::EventHandler(this, &LoginWindow::Hold_button_Click);
-				 // 
-				 // deafen_button
-				 // 
-				 this->deafen_button->FlatAppearance->BorderSize = 0;
-				 this->deafen_button->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-				 this->deafen_button->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"deafen_button.Image")));
-				 this->deafen_button->Location = System::Drawing::Point(284, 18);
-				 this->deafen_button->Name = L"deafen_button";
-				 this->deafen_button->Size = System::Drawing::Size(41, 41);
-				 this->deafen_button->TabIndex = 7;
-				 this->deafen_button->UseVisualStyleBackColor = true;
-				 this->deafen_button->Click += gcnew System::EventHandler(this, &LoginWindow::Deafen_button_Click);
-				 // 
-				 // mute_button
-				 // 
-				 this->mute_button->FlatAppearance->BorderSize = 0;
-				 this->mute_button->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-				 this->mute_button->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"mute_button.Image")));
-				 this->mute_button->Location = System::Drawing::Point(237, 18);
-				 this->mute_button->Name = L"mute_button";
-				 this->mute_button->Size = System::Drawing::Size(41, 41);
-				 this->mute_button->TabIndex = 6;
-				 this->mute_button->TextAlign = System::Drawing::ContentAlignment::MiddleRight;
-				 this->mute_button->UseVisualStyleBackColor = true;
-				 this->mute_button->Click += gcnew System::EventHandler(this, &LoginWindow::Mute_button_Click);
 				 // 
 				 // buddies_label
 				 // 
@@ -530,7 +560,7 @@ namespace TIPproj {
 				 this->add_buddy_button->FlatAppearance->BorderSize = 0;
 				 this->add_buddy_button->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
 				 this->add_buddy_button->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"add_buddy_button.Image")));
-				 this->add_buddy_button->Location = System::Drawing::Point(190, 18);
+				 this->add_buddy_button->Location = System::Drawing::Point(317, 251);
 				 this->add_buddy_button->Name = L"add_buddy_button";
 				 this->add_buddy_button->Size = System::Drawing::Size(41, 41);
 				 this->add_buddy_button->TabIndex = 4;
@@ -539,12 +569,12 @@ namespace TIPproj {
 				 // 
 				 // buddy_tree
 				 // 
-				 this->buddy_tree->Location = System::Drawing::Point(367, 47);
+				 this->buddy_tree->Location = System::Drawing::Point(367, 19);
 				 this->buddy_tree->Name = L"buddy_tree";
 				 this->buddy_tree->ShowLines = false;
 				 this->buddy_tree->ShowPlusMinus = false;
 				 this->buddy_tree->ShowRootLines = false;
-				 this->buddy_tree->Size = System::Drawing::Size(127, 245);
+				 this->buddy_tree->Size = System::Drawing::Size(127, 273);
 				 this->buddy_tree->TabIndex = 3;
 				 // 
 				 // dialer_textbox
@@ -605,6 +635,7 @@ namespace TIPproj {
 				 this->buddy_context_menu->ResumeLayout(false);
 				 this->connected_group->ResumeLayout(false);
 				 this->connected_group->PerformLayout();
+				 this->active_call_box->ResumeLayout(false);
 				 this->ResumeLayout(false);
 				 this->PerformLayout();
 
@@ -798,6 +829,7 @@ namespace TIPproj {
 	private: System::Void Mute_button_Click(System::Object^ sender, System::EventArgs^ e) {
 		MyCall* call = acc->active_call;
 		if (call) {
+
 			if (call->isMuted) {
 				try {
 					call->aud_med.adjustRxLevel(1.0);
@@ -876,22 +908,7 @@ namespace TIPproj {
 			}
 		}
 	}
-	private: System::Void Status_checkbox_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
-		if (status_checkbox->Text == "Online") {
-			PresenceStatus ps;
-			ps.status = PJSUA_BUDDY_STATUS_OFFLINE;
-			acc->setOnlineStatus(ps);
-			status_checkbox->Text = "Offline";
-
-		}
-		else if (status_checkbox->Text == "Offline") {
-			PresenceStatus ps;
-			ps.status = PJSUA_BUDDY_STATUS_ONLINE;
-			acc->setOnlineStatus(ps);
-			status_checkbox->Text = "Online";;
-		}
-	}
-
+	
 	private: System::Void Digit1_button_Click(System::Object^ sender, System::EventArgs^ e) {
 		dialer_textbox->Text += "1";
 	}
@@ -929,7 +946,9 @@ namespace TIPproj {
 		dialer_textbox->Text += "#";
 	}
 			 void PollBuddies(System::Object^ sender, System::EventArgs^ e);
-	};
+	private: System::Void Call_time_label_Click(System::Object^ sender, System::EventArgs^ e) {
+	}
+};
 
 }
 
@@ -955,6 +974,42 @@ void TIPproj::LoginWindow::PollBuddies(System::Object^ sender, System::EventArgs
 					}
 				}
 			}
+		}
+		if (acc->active_call) {
+			CallInfo info;
+			try {
+				info = acc->active_call->getInfo();
+			}
+			catch (...) {
+
+			}
+			finally{
+			if (info.state == PJSIP_INV_STATE_CALLING || info.state == PJSIP_INV_STATE_EARLY) {
+				active_call_box->Visible = true;
+
+				call_time_label->Text = "Calling...";
+				active_caller_id_label->Text = gcnew String(info.remoteUri.c_str());
+
+
+			}
+			else if (info.state == PJSIP_INV_STATE_CONFIRMED) {
+				active_call_box->Visible = true;
+				std::string temp_time = "";
+				temp_time += std::to_string(info.totalDuration.sec / 60) + ":" + std::to_string(info.totalDuration.sec % 60);
+				call_time_label->Text = gcnew String(temp_time.c_str());
+				active_caller_id_label->Text = gcnew String(info.remoteUri.c_str());
+			}
+			else if (info.state == PJSIP_INV_STATE_DISCONNECTED || info.state == PJSIP_INV_STATE_NULL) {
+				active_call_box->Visible = false;
+				call_time_label->Text = "0:00";
+				active_caller_id_label->Text = "No active call";
+			}
+			}
+		}
+		else {
+			active_call_box->Visible = false;
+			call_time_label->Text = "0:00";
+			active_caller_id_label->Text = "No active call";
 		}
 	}
 }

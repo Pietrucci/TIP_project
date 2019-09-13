@@ -16,7 +16,7 @@ void MyAccount::onIncomingCall(OnIncomingCallParam& iprm)
 	CallOpParam prm;
 	std::string s = "Answer " + ci.remoteUri + "?";
 	System::String^ remUri = gcnew System::String(s.c_str());
-	if (!active_call && MessageBox::Show(remUri, "Incoming call", MessageBoxButtons::YesNo, MessageBoxIcon::Question) == DialogResult::Yes)
+	if (MessageBox::Show(remUri, "Incoming call", MessageBoxButtons::YesNo, MessageBoxIcon::Question) == DialogResult::Yes)
 	{
 		active_call = call;
 		prm.statusCode = (pjsip_status_code)200;
