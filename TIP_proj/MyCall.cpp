@@ -1,13 +1,8 @@
 #include "MyCall.h"
-#include "LoginWindow.h"
 
 MyCall::MyCall(Account& acc, int call_id): Call(acc, call_id)
 {
 	myAcc = (MyAccount*)& acc;
-}
-
-MyCall::~MyCall()
-{
 }
 
 void MyCall::onCallState(OnCallStateParam& prm)

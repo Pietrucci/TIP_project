@@ -29,10 +29,15 @@ namespace TIPproj {
 		{
 			InitializeComponent();
 			AppInit();
+			BuddyPollTimer->Interval = 1000;
+			BuddyPollTimer->Tick += gcnew System::EventHandler(this, &TIPproj::LoginWindow::PollBuddies);
+			BuddyPollTimer->Start();
 		}
 
 	private: Endpoint& ep = Endpoint::instance();
 	private: MyAccount* acc;
+	private: Timer^ BuddyPollTimer;
+
 	private: System::Windows::Forms::Button^ deafen_button;
 	private: System::Windows::Forms::Button^ mute_button;
 	private: System::Windows::Forms::CheckBox^ status_checkbox;
@@ -70,8 +75,7 @@ namespace TIPproj {
 		}
 	}
 	public: System::Windows::Forms::TextBox^ server_textbox;
-
-
+	protected:
 
 	private: System::Windows::Forms::Label^ server_label;
 	private: System::Windows::Forms::Label^ number_label;
@@ -88,8 +92,6 @@ namespace TIPproj {
 	private: System::Windows::Forms::ToolStripMenuItem^ call;
 	private: System::Windows::Forms::ToolStripMenuItem^ remove;
 	public: System::Windows::Forms::TreeView^ buddy_tree;
-	private:
-
 	private: System::Windows::Forms::Button^ add_buddy_button;
 	private: System::Windows::Forms::Label^ buddies_label;
 	private: System::ComponentModel::IContainer^ components;
@@ -138,6 +140,7 @@ namespace TIPproj {
 				 this->dialer_textbox = (gcnew System::Windows::Forms::TextBox());
 				 this->hangup_button = (gcnew System::Windows::Forms::Button());
 				 this->call_button = (gcnew System::Windows::Forms::Button());
+				 this->BuddyPollTimer = (gcnew Timer());
 				 this->buddy_context_menu->SuspendLayout();
 				 this->connected_group->SuspendLayout();
 				 this->SuspendLayout();
@@ -169,7 +172,7 @@ namespace TIPproj {
 				 this->server_textbox->Name = L"server_textbox";
 				 this->server_textbox->Size = System::Drawing::Size(100, 20);
 				 this->server_textbox->TabIndex = 0;
-				 this->server_textbox->Text = L"192.168.0.40:5160";
+				 this->server_textbox->Text = L"10.0.0.136:5160";
 				 this->server_textbox->TextChanged += gcnew System::EventHandler(this, &LoginWindow::Server_textbox_TextChanged);
 				 // 
 				 // server_label
@@ -235,7 +238,7 @@ namespace TIPproj {
 				 this->connection_status_label->AutoSize = true;
 				 this->connection_status_label->ContextMenuStrip = this->buddy_context_menu;
 				 this->connection_status_label->ForeColor = System::Drawing::Color::Red;
-				 this->connection_status_label->Location = System::Drawing::Point(421, 28);
+				 this->connection_status_label->Location = System::Drawing::Point(433, 25);
 				 this->connection_status_label->Name = L"connection_status_label";
 				 this->connection_status_label->Size = System::Drawing::Size(73, 13);
 				 this->connection_status_label->TabIndex = 8;
@@ -276,7 +279,7 @@ namespace TIPproj {
 				 // 
 				 this->digit_hash_button->FlatAppearance->BorderSize = 0;
 				 this->digit_hash_button->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-				 this->digit_hash_button->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 15.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				 this->digit_hash_button->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 18, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 					 static_cast<System::Byte>(238)));
 				 this->digit_hash_button->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"digit_hash_button.Image")));
 				 this->digit_hash_button->Location = System::Drawing::Point(104, 204);
@@ -284,6 +287,7 @@ namespace TIPproj {
 				 this->digit_hash_button->Size = System::Drawing::Size(41, 41);
 				 this->digit_hash_button->TabIndex = 21;
 				 this->digit_hash_button->Text = L"#";
+				 this->digit_hash_button->UseCompatibleTextRendering = true;
 				 this->digit_hash_button->UseVisualStyleBackColor = true;
 				 this->digit_hash_button->Click += gcnew System::EventHandler(this, &LoginWindow::Digit_hash_button_Click);
 				 // 
@@ -291,7 +295,7 @@ namespace TIPproj {
 				 // 
 				 this->digit0_button->FlatAppearance->BorderSize = 0;
 				 this->digit0_button->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-				 this->digit0_button->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 15.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				 this->digit0_button->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 18, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 					 static_cast<System::Byte>(238)));
 				 this->digit0_button->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"digit0_button.Image")));
 				 this->digit0_button->Location = System::Drawing::Point(57, 204);
@@ -299,6 +303,7 @@ namespace TIPproj {
 				 this->digit0_button->Size = System::Drawing::Size(41, 41);
 				 this->digit0_button->TabIndex = 20;
 				 this->digit0_button->Text = L"0";
+				 this->digit0_button->UseCompatibleTextRendering = true;
 				 this->digit0_button->UseVisualStyleBackColor = true;
 				 this->digit0_button->Click += gcnew System::EventHandler(this, &LoginWindow::Digit0_button_Click);
 				 // 
@@ -306,14 +311,15 @@ namespace TIPproj {
 				 // 
 				 this->digit_asterisk_button->FlatAppearance->BorderSize = 0;
 				 this->digit_asterisk_button->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-				 this->digit_asterisk_button->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 15.75F, System::Drawing::FontStyle::Bold,
-					 System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(238)));
+				 this->digit_asterisk_button->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 18, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+					 static_cast<System::Byte>(238)));
 				 this->digit_asterisk_button->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"digit_asterisk_button.Image")));
 				 this->digit_asterisk_button->Location = System::Drawing::Point(10, 204);
 				 this->digit_asterisk_button->Name = L"digit_asterisk_button";
 				 this->digit_asterisk_button->Size = System::Drawing::Size(41, 41);
 				 this->digit_asterisk_button->TabIndex = 19;
 				 this->digit_asterisk_button->Text = L"*";
+				 this->digit_asterisk_button->UseCompatibleTextRendering = true;
 				 this->digit_asterisk_button->UseVisualStyleBackColor = true;
 				 this->digit_asterisk_button->Click += gcnew System::EventHandler(this, &LoginWindow::Digit_asterisk_button_Click);
 				 // 
@@ -321,7 +327,7 @@ namespace TIPproj {
 				 // 
 				 this->digit9_button->FlatAppearance->BorderSize = 0;
 				 this->digit9_button->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-				 this->digit9_button->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 15.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				 this->digit9_button->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 18, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 					 static_cast<System::Byte>(238)));
 				 this->digit9_button->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"digit9_button.Image")));
 				 this->digit9_button->Location = System::Drawing::Point(104, 157);
@@ -329,6 +335,7 @@ namespace TIPproj {
 				 this->digit9_button->Size = System::Drawing::Size(41, 41);
 				 this->digit9_button->TabIndex = 18;
 				 this->digit9_button->Text = L"9";
+				 this->digit9_button->UseCompatibleTextRendering = true;
 				 this->digit9_button->UseVisualStyleBackColor = true;
 				 this->digit9_button->Click += gcnew System::EventHandler(this, &LoginWindow::Digit9_button_Click);
 				 // 
@@ -336,7 +343,7 @@ namespace TIPproj {
 				 // 
 				 this->digit8_button->FlatAppearance->BorderSize = 0;
 				 this->digit8_button->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-				 this->digit8_button->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 15.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				 this->digit8_button->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 18, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 					 static_cast<System::Byte>(238)));
 				 this->digit8_button->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"digit8_button.Image")));
 				 this->digit8_button->Location = System::Drawing::Point(57, 157);
@@ -344,6 +351,7 @@ namespace TIPproj {
 				 this->digit8_button->Size = System::Drawing::Size(41, 41);
 				 this->digit8_button->TabIndex = 17;
 				 this->digit8_button->Text = L"8";
+				 this->digit8_button->UseCompatibleTextRendering = true;
 				 this->digit8_button->UseVisualStyleBackColor = true;
 				 this->digit8_button->Click += gcnew System::EventHandler(this, &LoginWindow::Digit8_button_Click);
 				 // 
@@ -351,7 +359,7 @@ namespace TIPproj {
 				 // 
 				 this->digit7_button->FlatAppearance->BorderSize = 0;
 				 this->digit7_button->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-				 this->digit7_button->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 15.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				 this->digit7_button->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 18, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 					 static_cast<System::Byte>(238)));
 				 this->digit7_button->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"digit7_button.Image")));
 				 this->digit7_button->Location = System::Drawing::Point(10, 157);
@@ -359,6 +367,7 @@ namespace TIPproj {
 				 this->digit7_button->Size = System::Drawing::Size(41, 41);
 				 this->digit7_button->TabIndex = 16;
 				 this->digit7_button->Text = L"7";
+				 this->digit7_button->UseCompatibleTextRendering = true;
 				 this->digit7_button->UseVisualStyleBackColor = true;
 				 this->digit7_button->Click += gcnew System::EventHandler(this, &LoginWindow::Digit7_button_Click);
 				 // 
@@ -366,7 +375,7 @@ namespace TIPproj {
 				 // 
 				 this->digit6_button->FlatAppearance->BorderSize = 0;
 				 this->digit6_button->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-				 this->digit6_button->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 15.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				 this->digit6_button->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 18, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 					 static_cast<System::Byte>(238)));
 				 this->digit6_button->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"digit6_button.Image")));
 				 this->digit6_button->Location = System::Drawing::Point(104, 110);
@@ -374,6 +383,7 @@ namespace TIPproj {
 				 this->digit6_button->Size = System::Drawing::Size(41, 41);
 				 this->digit6_button->TabIndex = 15;
 				 this->digit6_button->Text = L"6";
+				 this->digit6_button->UseCompatibleTextRendering = true;
 				 this->digit6_button->UseVisualStyleBackColor = true;
 				 this->digit6_button->Click += gcnew System::EventHandler(this, &LoginWindow::Digit6_button_Click);
 				 // 
@@ -381,7 +391,7 @@ namespace TIPproj {
 				 // 
 				 this->digit5_button->FlatAppearance->BorderSize = 0;
 				 this->digit5_button->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-				 this->digit5_button->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 15.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				 this->digit5_button->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 18, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 					 static_cast<System::Byte>(238)));
 				 this->digit5_button->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"digit5_button.Image")));
 				 this->digit5_button->Location = System::Drawing::Point(57, 110);
@@ -389,6 +399,7 @@ namespace TIPproj {
 				 this->digit5_button->Size = System::Drawing::Size(41, 41);
 				 this->digit5_button->TabIndex = 14;
 				 this->digit5_button->Text = L"5";
+				 this->digit5_button->UseCompatibleTextRendering = true;
 				 this->digit5_button->UseVisualStyleBackColor = true;
 				 this->digit5_button->Click += gcnew System::EventHandler(this, &LoginWindow::Digit5_button_Click);
 				 // 
@@ -396,7 +407,7 @@ namespace TIPproj {
 				 // 
 				 this->digit4_button->FlatAppearance->BorderSize = 0;
 				 this->digit4_button->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-				 this->digit4_button->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 15.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				 this->digit4_button->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 18, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 					 static_cast<System::Byte>(238)));
 				 this->digit4_button->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"digit4_button.Image")));
 				 this->digit4_button->Location = System::Drawing::Point(10, 110);
@@ -404,6 +415,7 @@ namespace TIPproj {
 				 this->digit4_button->Size = System::Drawing::Size(41, 41);
 				 this->digit4_button->TabIndex = 13;
 				 this->digit4_button->Text = L"4";
+				 this->digit4_button->UseCompatibleTextRendering = true;
 				 this->digit4_button->UseVisualStyleBackColor = true;
 				 this->digit4_button->Click += gcnew System::EventHandler(this, &LoginWindow::Digit4_button_Click);
 				 // 
@@ -411,7 +423,7 @@ namespace TIPproj {
 				 // 
 				 this->digit3_button->FlatAppearance->BorderSize = 0;
 				 this->digit3_button->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-				 this->digit3_button->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 15.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				 this->digit3_button->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 18, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 					 static_cast<System::Byte>(238)));
 				 this->digit3_button->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"digit3_button.Image")));
 				 this->digit3_button->Location = System::Drawing::Point(104, 63);
@@ -419,6 +431,7 @@ namespace TIPproj {
 				 this->digit3_button->Size = System::Drawing::Size(41, 41);
 				 this->digit3_button->TabIndex = 12;
 				 this->digit3_button->Text = L"3";
+				 this->digit3_button->UseCompatibleTextRendering = true;
 				 this->digit3_button->UseVisualStyleBackColor = true;
 				 this->digit3_button->Click += gcnew System::EventHandler(this, &LoginWindow::Digit3_button_Click);
 				 // 
@@ -426,7 +439,7 @@ namespace TIPproj {
 				 // 
 				 this->digit2_button->FlatAppearance->BorderSize = 0;
 				 this->digit2_button->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-				 this->digit2_button->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 15.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				 this->digit2_button->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 18, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 					 static_cast<System::Byte>(238)));
 				 this->digit2_button->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"digit2_button.Image")));
 				 this->digit2_button->Location = System::Drawing::Point(57, 63);
@@ -434,6 +447,7 @@ namespace TIPproj {
 				 this->digit2_button->Size = System::Drawing::Size(41, 41);
 				 this->digit2_button->TabIndex = 11;
 				 this->digit2_button->Text = L"2";
+				 this->digit2_button->UseCompatibleTextRendering = true;
 				 this->digit2_button->UseVisualStyleBackColor = true;
 				 this->digit2_button->Click += gcnew System::EventHandler(this, &LoginWindow::Digit2_button_Click);
 				 // 
@@ -441,7 +455,7 @@ namespace TIPproj {
 				 // 
 				 this->digit1_button->FlatAppearance->BorderSize = 0;
 				 this->digit1_button->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-				 this->digit1_button->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 15.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				 this->digit1_button->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 18, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 					 static_cast<System::Byte>(238)));
 				 this->digit1_button->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"digit1_button.Image")));
 				 this->digit1_button->Location = System::Drawing::Point(10, 63);
@@ -449,6 +463,7 @@ namespace TIPproj {
 				 this->digit1_button->Size = System::Drawing::Size(41, 41);
 				 this->digit1_button->TabIndex = 10;
 				 this->digit1_button->Text = L"1";
+				 this->digit1_button->UseCompatibleTextRendering = true;
 				 this->digit1_button->UseVisualStyleBackColor = true;
 				 this->digit1_button->Click += gcnew System::EventHandler(this, &LoginWindow::Digit1_button_Click);
 				 // 
@@ -481,7 +496,7 @@ namespace TIPproj {
 				 this->deafen_button->FlatAppearance->BorderSize = 0;
 				 this->deafen_button->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
 				 this->deafen_button->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"deafen_button.Image")));
-				 this->deafen_button->Location = System::Drawing::Point(269, 16);
+				 this->deafen_button->Location = System::Drawing::Point(284, 18);
 				 this->deafen_button->Name = L"deafen_button";
 				 this->deafen_button->Size = System::Drawing::Size(41, 41);
 				 this->deafen_button->TabIndex = 7;
@@ -493,7 +508,7 @@ namespace TIPproj {
 				 this->mute_button->FlatAppearance->BorderSize = 0;
 				 this->mute_button->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
 				 this->mute_button->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"mute_button.Image")));
-				 this->mute_button->Location = System::Drawing::Point(222, 16);
+				 this->mute_button->Location = System::Drawing::Point(237, 18);
 				 this->mute_button->Name = L"mute_button";
 				 this->mute_button->Size = System::Drawing::Size(41, 41);
 				 this->mute_button->TabIndex = 6;
@@ -515,7 +530,7 @@ namespace TIPproj {
 				 this->add_buddy_button->FlatAppearance->BorderSize = 0;
 				 this->add_buddy_button->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
 				 this->add_buddy_button->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"add_buddy_button.Image")));
-				 this->add_buddy_button->Location = System::Drawing::Point(175, 16);
+				 this->add_buddy_button->Location = System::Drawing::Point(190, 18);
 				 this->add_buddy_button->Name = L"add_buddy_button";
 				 this->add_buddy_button->Size = System::Drawing::Size(41, 41);
 				 this->add_buddy_button->TabIndex = 4;
@@ -542,6 +557,7 @@ namespace TIPproj {
 				 this->dialer_textbox->Size = System::Drawing::Size(135, 38);
 				 this->dialer_textbox->TabIndex = 2;
 				 this->dialer_textbox->Text = L"8222";
+				 this->dialer_textbox->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
 				 // 
 				 // hangup_button
 				 // 
@@ -690,9 +706,16 @@ namespace TIPproj {
 
 		cfg.uri = "sip:" + number_string + "@" + server;
 		MyBuddy* buddy = new MyBuddy();
-		buddy->create(*acc, cfg);
-		buddy->subscribePresence(true);
-		acc->buddies.push_back(buddy);
+		try {
+			buddy->create(*acc, cfg);
+			buddy->subscribePresence(true);
+		}
+		catch (...) {
+
+		}
+		finally{
+			acc->buddies.push_back(buddy);
+		}
 
 	}
 	public: void AppRemoveBuddy(String^ number) {
@@ -868,42 +891,61 @@ namespace TIPproj {
 			status_checkbox->Text = "Online";;
 		}
 	}
-private: System::Void Digit1_button_Click(System::Object^ sender, System::EventArgs^ e) {
-	dialer_textbox->Text += "1";
-}
-private: System::Void Digit2_button_Click(System::Object^ sender, System::EventArgs^ e) {
-	dialer_textbox->Text += "2";
-}
-private: System::Void Digit3_button_Click(System::Object^ sender, System::EventArgs^ e) {
-	dialer_textbox->Text += "3";
-}
-private: System::Void Digit4_button_Click(System::Object^ sender, System::EventArgs^ e) {
-	dialer_textbox->Text += "4";
-}
-private: System::Void Digit5_button_Click(System::Object^ sender, System::EventArgs^ e) {
-	dialer_textbox->Text += "5";
-}
-private: System::Void Digit6_button_Click(System::Object^ sender, System::EventArgs^ e) {
-	dialer_textbox->Text += "6";
-}
-private: System::Void Digit7_button_Click(System::Object^ sender, System::EventArgs^ e) {
-	dialer_textbox->Text += "7";
-}
-private: System::Void Digit8_button_Click(System::Object^ sender, System::EventArgs^ e) {
-	dialer_textbox->Text += "8";
-}
-private: System::Void Digit9_button_Click(System::Object^ sender, System::EventArgs^ e) {
-	dialer_textbox->Text += "9";
-}
-private: System::Void Digit_asterisk_button_Click(System::Object^ sender, System::EventArgs^ e) {
-	dialer_textbox->Text += "*";
-}
-private: System::Void Digit0_button_Click(System::Object^ sender, System::EventArgs^ e) {
-	dialer_textbox->Text += "0";
-}
-private: System::Void Digit_hash_button_Click(System::Object^ sender, System::EventArgs^ e) {
-	dialer_textbox->Text += "#";
-}
-};
 
+	private: System::Void Digit1_button_Click(System::Object^ sender, System::EventArgs^ e) {
+		dialer_textbox->Text += "1";
+	}
+	private: System::Void Digit2_button_Click(System::Object^ sender, System::EventArgs^ e) {
+		dialer_textbox->Text += "2";
+	}
+	private: System::Void Digit3_button_Click(System::Object^ sender, System::EventArgs^ e) {
+		dialer_textbox->Text += "3";
+	}
+	private: System::Void Digit4_button_Click(System::Object^ sender, System::EventArgs^ e) {
+		dialer_textbox->Text += "4";
+	}
+	private: System::Void Digit5_button_Click(System::Object^ sender, System::EventArgs^ e) {
+		dialer_textbox->Text += "5";
+	}
+	private: System::Void Digit6_button_Click(System::Object^ sender, System::EventArgs^ e) {
+		dialer_textbox->Text += "6";
+	}
+	private: System::Void Digit7_button_Click(System::Object^ sender, System::EventArgs^ e) {
+		dialer_textbox->Text += "7";
+	}
+	private: System::Void Digit8_button_Click(System::Object^ sender, System::EventArgs^ e) {
+		dialer_textbox->Text += "8";
+	}
+	private: System::Void Digit9_button_Click(System::Object^ sender, System::EventArgs^ e) {
+		dialer_textbox->Text += "9";
+	}
+	private: System::Void Digit_asterisk_button_Click(System::Object^ sender, System::EventArgs^ e) {
+		dialer_textbox->Text += "*";
+	}
+	private: System::Void Digit0_button_Click(System::Object^ sender, System::EventArgs^ e) {
+		dialer_textbox->Text += "0";
+	}
+	private: System::Void Digit_hash_button_Click(System::Object^ sender, System::EventArgs^ e) {
+		dialer_textbox->Text += "#";
+	}
+			 void PollBuddies(System::Object^ sender, System::EventArgs^ e);
+	};
+
+}
+
+void TIPproj::LoginWindow::PollBuddies(System::Object^ sender, System::EventArgs^ e)
+{
+	if (acc) {
+		for (auto buddy : acc->buddies) {
+			auto info = buddy->getInfo();
+			if (info.presStatus.status == PJSUA_BUDDY_STATUS_ONLINE) {
+				auto x = buddy_tree->Nodes;
+
+			}
+			else if (info.presStatus.status == PJSUA_BUDDY_STATUS_OFFLINE) {
+				auto x = buddy_tree->Nodes;
+
+			}
+		}
+	}
 }
