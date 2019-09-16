@@ -2,7 +2,6 @@
 #include <windows.h>
 #include <pjsua2.hpp>
 #include <iostream>
-#include "ReferenceClass.h"
 #include "MyCall.h"
 using namespace pj;
 

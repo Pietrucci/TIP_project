@@ -549,7 +549,7 @@ namespace TIPproj {
 				 // buddies_label
 				 // 
 				 this->buddies_label->AutoSize = true;
-				 this->buddies_label->Location = System::Drawing::Point(364, 31);
+				 this->buddies_label->Location = System::Drawing::Point(365, 16);
 				 this->buddies_label->Name = L"buddies_label";
 				 this->buddies_label->Size = System::Drawing::Size(45, 13);
 				 this->buddies_label->TabIndex = 5;
@@ -569,12 +569,12 @@ namespace TIPproj {
 				 // 
 				 // buddy_tree
 				 // 
-				 this->buddy_tree->Location = System::Drawing::Point(367, 19);
+				 this->buddy_tree->Location = System::Drawing::Point(367, 31);
 				 this->buddy_tree->Name = L"buddy_tree";
 				 this->buddy_tree->ShowLines = false;
 				 this->buddy_tree->ShowPlusMinus = false;
 				 this->buddy_tree->ShowRootLines = false;
-				 this->buddy_tree->Size = System::Drawing::Size(127, 273);
+				 this->buddy_tree->Size = System::Drawing::Size(127, 261);
 				 this->buddy_tree->TabIndex = 3;
 				 // 
 				 // dialer_textbox

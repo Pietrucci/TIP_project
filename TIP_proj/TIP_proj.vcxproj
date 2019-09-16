@@ -140,7 +140,6 @@
     <ClCompile Include="MyAccount.cpp" />
     <ClCompile Include="MyBuddy.cpp" />
     <ClCompile Include="MyCall.cpp" />
-    <ClCompile Include="ReferenceClass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LoginWindow.h">
@@ -149,7 +148,6 @@
     <ClInclude Include="MyAccount.h" />
     <ClInclude Include="MyBuddy.h" />
     <ClInclude Include="MyCall.h" />
-    <ClInclude Include="ReferenceClass.h" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="LoginWindow.resx">
