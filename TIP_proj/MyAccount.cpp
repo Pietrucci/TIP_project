@@ -16,6 +16,8 @@ void MyAccount::onIncomingCall(OnIncomingCallParam& iprm)
 	CallOpParam prm;
 	std::string s = "Answer " + ci.remoteUri + "?";
 	System::String^ remUri = gcnew System::String(s.c_str());
+	System::Media::SoundPlayer player("ringtone.wav");
+	player.Play();
 	if (MessageBox::Show(remUri, "Incoming call", MessageBoxButtons::YesNo, MessageBoxIcon::Question) == DialogResult::Yes)
 	{
 		active_call = call;
@@ -29,5 +31,5 @@ void MyAccount::onIncomingCall(OnIncomingCallParam& iprm)
 		call->hangup(prm);
 		delete call;
 	}
-
+	player.Stop();
 }
