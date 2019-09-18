@@ -1,4 +1,5 @@
 #pragma once
+#include <mysql.h>
 #include "MyAccount.h"
 #include "MyBuddy.h"
 #include "MyCall.h"
@@ -9,7 +10,7 @@
 #include <algorithm>
 #include <functional>
 #include <iostream>
-
+int qstate;
 
 namespace TIPproj {
 
@@ -68,6 +69,7 @@ namespace TIPproj {
 	private: System::Windows::Forms::GroupBox^ active_call_box;
 	private: System::Windows::Forms::Label^ active_caller_id_label;
 	private: System::Windows::Forms::Label^ call_time_label;
+	private: System::Windows::Forms::Button^ create_button;
 
 	private: System::Windows::Forms::Button^ hold_button;
 
@@ -147,6 +149,7 @@ namespace TIPproj {
 				 this->hangup_button = (gcnew System::Windows::Forms::Button());
 				 this->call_button = (gcnew System::Windows::Forms::Button());
 				 this->BuddyPollTimer = (gcnew System::Windows::Forms::Timer(this->components));
+				 this->create_button = (gcnew System::Windows::Forms::Button());
 				 this->buddy_context_menu->SuspendLayout();
 				 this->connected_group->SuspendLayout();
 				 this->active_call_box->SuspendLayout();
@@ -154,21 +157,22 @@ namespace TIPproj {
 				 // 
 				 // buddy_context_menu
 				 // 
+				 this->buddy_context_menu->ImageScalingSize = System::Drawing::Size(20, 20);
 				 this->buddy_context_menu->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) { this->call, this->remove });
 				 this->buddy_context_menu->Name = L"buddy_context_menu";
-				 this->buddy_context_menu->Size = System::Drawing::Size(155, 48);
+				 this->buddy_context_menu->Size = System::Drawing::Size(179, 52);
 				 // 
 				 // call
 				 // 
 				 this->call->Name = L"call";
-				 this->call->Size = System::Drawing::Size(154, 22);
+				 this->call->Size = System::Drawing::Size(178, 24);
 				 this->call->Text = L"Call";
 				 this->call->Click += gcnew System::EventHandler(this, &LoginWindow::Call_Click);
 				 // 
 				 // remove
 				 // 
 				 this->remove->Name = L"remove";
-				 this->remove->Size = System::Drawing::Size(154, 22);
+				 this->remove->Size = System::Drawing::Size(178, 24);
 				 this->remove->Text = L"Remove buddy";
 				 this->remove->Click += gcnew System::EventHandler(this, &LoginWindow::Remove_Click);
 				 // 
@@ -177,9 +181,9 @@ namespace TIPproj {
 				 this->server_textbox->Location = System::Drawing::Point(22, 25);
 				 this->server_textbox->MaxLength = 32;
 				 this->server_textbox->Name = L"server_textbox";
-				 this->server_textbox->Size = System::Drawing::Size(100, 20);
+				 this->server_textbox->Size = System::Drawing::Size(100, 22);
 				 this->server_textbox->TabIndex = 0;
-				 this->server_textbox->Text = L"192.168.43.21:5160";
+				 this->server_textbox->Text = L"192.168.0.36:5160";
 				 this->server_textbox->TextChanged += gcnew System::EventHandler(this, &LoginWindow::Server_textbox_TextChanged);
 				 // 
 				 // server_label
@@ -187,7 +191,7 @@ namespace TIPproj {
 				 this->server_label->AutoSize = true;
 				 this->server_label->Location = System::Drawing::Point(19, 9);
 				 this->server_label->Name = L"server_label";
-				 this->server_label->Size = System::Drawing::Size(78, 13);
+				 this->server_label->Size = System::Drawing::Size(105, 17);
 				 this->server_label->TabIndex = 1;
 				 this->server_label->Text = L"Server address";
 				 // 
@@ -196,7 +200,7 @@ namespace TIPproj {
 				 this->number_label->AutoSize = true;
 				 this->number_label->Location = System::Drawing::Point(125, 9);
 				 this->number_label->Name = L"number_label";
-				 this->number_label->Size = System::Drawing::Size(44, 13);
+				 this->number_label->Size = System::Drawing::Size(58, 17);
 				 this->number_label->TabIndex = 2;
 				 this->number_label->Text = L"Number";
 				 this->number_label->Click += gcnew System::EventHandler(this, &LoginWindow::Label1_Click);
@@ -206,7 +210,7 @@ namespace TIPproj {
 				 this->password_label->AutoSize = true;
 				 this->password_label->Location = System::Drawing::Point(231, 9);
 				 this->password_label->Name = L"password_label";
-				 this->password_label->Size = System::Drawing::Size(53, 13);
+				 this->password_label->Size = System::Drawing::Size(69, 17);
 				 this->password_label->TabIndex = 3;
 				 this->password_label->Text = L"Password";
 				 // 
@@ -215,7 +219,7 @@ namespace TIPproj {
 				 this->number_textbox->Location = System::Drawing::Point(128, 25);
 				 this->number_textbox->MaxLength = 32;
 				 this->number_textbox->Name = L"number_textbox";
-				 this->number_textbox->Size = System::Drawing::Size(100, 20);
+				 this->number_textbox->Size = System::Drawing::Size(100, 22);
 				 this->number_textbox->TabIndex = 4;
 				 this->number_textbox->Text = L"9222";
 				 // 
@@ -225,10 +229,11 @@ namespace TIPproj {
 				 this->password_textbox->MaxLength = 32;
 				 this->password_textbox->Name = L"password_textbox";
 				 this->password_textbox->PasswordChar = '•';
-				 this->password_textbox->Size = System::Drawing::Size(100, 20);
+				 this->password_textbox->Size = System::Drawing::Size(100, 22);
 				 this->password_textbox->TabIndex = 5;
 				 this->password_textbox->Text = L"12345";
 				 this->password_textbox->UseSystemPasswordChar = true;
+				 this->password_textbox->TextChanged += gcnew System::EventHandler(this, &LoginWindow::Password_textbox_TextChanged);
 				 // 
 				 // connect_buton
 				 // 
@@ -245,9 +250,9 @@ namespace TIPproj {
 				 this->connection_status_label->AutoSize = true;
 				 this->connection_status_label->ContextMenuStrip = this->buddy_context_menu;
 				 this->connection_status_label->ForeColor = System::Drawing::Color::Red;
-				 this->connection_status_label->Location = System::Drawing::Point(433, 25);
+				 this->connection_status_label->Location = System::Drawing::Point(326, 4);
 				 this->connection_status_label->Name = L"connection_status_label";
-				 this->connection_status_label->Size = System::Drawing::Size(73, 13);
+				 this->connection_status_label->Size = System::Drawing::Size(94, 17);
 				 this->connection_status_label->TabIndex = 8;
 				 this->connection_status_label->Text = L"Disconnected";
 				 // 
@@ -551,7 +556,7 @@ namespace TIPproj {
 				 this->buddies_label->AutoSize = true;
 				 this->buddies_label->Location = System::Drawing::Point(365, 16);
 				 this->buddies_label->Name = L"buddies_label";
-				 this->buddies_label->Size = System::Drawing::Size(45, 13);
+				 this->buddies_label->Size = System::Drawing::Size(59, 17);
 				 this->buddies_label->TabIndex = 5;
 				 this->buddies_label->Text = L"Buddies";
 				 // 
@@ -584,7 +589,7 @@ namespace TIPproj {
 				 this->dialer_textbox->Location = System::Drawing::Point(10, 19);
 				 this->dialer_textbox->MaxLength = 32;
 				 this->dialer_textbox->Name = L"dialer_textbox";
-				 this->dialer_textbox->Size = System::Drawing::Size(135, 38);
+				 this->dialer_textbox->Size = System::Drawing::Size(135, 46);
 				 this->dialer_textbox->TabIndex = 2;
 				 this->dialer_textbox->Text = L"8222";
 				 this->dialer_textbox->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
@@ -614,10 +619,21 @@ namespace TIPproj {
 				 this->call_button->UseVisualStyleBackColor = false;
 				 this->call_button->Click += gcnew System::EventHandler(this, &LoginWindow::Call_button_Click);
 				 // 
+				 // create_button
+				 // 
+				 this->create_button->Location = System::Drawing::Point(421, 12);
+				 this->create_button->Name = L"create_button";
+				 this->create_button->Size = System::Drawing::Size(91, 43);
+				 this->create_button->TabIndex = 10;
+				 this->create_button->Text = L"Create account";
+				 this->create_button->UseVisualStyleBackColor = true;
+				 this->create_button->Click += gcnew System::EventHandler(this, &LoginWindow::create_button_Click);
+				 // 
 				 // LoginWindow
 				 // 
 				 this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::None;
 				 this->ClientSize = System::Drawing::Size(524, 361);
+				 this->Controls->Add(this->create_button);
 				 this->Controls->Add(this->connected_group);
 				 this->Controls->Add(this->connection_status_label);
 				 this->Controls->Add(this->connect_buton);
@@ -663,6 +679,7 @@ namespace TIPproj {
 			server_textbox->ReadOnly = false;
 			number_textbox->ReadOnly = false;
 			connect_buton->Text = "Connect";
+			create_button->Visible = true;
 			ApplicationDisonnect();
 		}
 	}
@@ -708,6 +725,7 @@ namespace TIPproj {
 
 		}
 		else {
+			create_button->Visible = false;
 			connection_status_label->Text = "Connected";
 			connection_status_label->ForeColor = Color::ForestGreen;
 			connected_group->Visible = true;
@@ -948,6 +966,102 @@ namespace TIPproj {
 			 void PollBuddies(System::Object^ sender, System::EventArgs^ e);
 	private: System::Void Call_time_label_Click(System::Object^ sender, System::EventArgs^ e) {
 	}
+private: System::Void Password_textbox_TextChanged(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void create_button_Click(System::Object^ sender, System::EventArgs^ e) {
+	string server = msclr::interop::marshal_as<std::string>(server_textbox->Text);
+	string ip_address = server.substr(0,server.find(":"));
+	const char* server_name = ip_address.c_str();
+	MYSQL* conn;
+	MYSQL_ROW row;
+	MYSQL_RES* res;
+	conn = mysql_init(0);
+	conn = mysql_real_connect(conn,server_name , "test", "adminadmin", "asterisk", 3306, NULL,0);
+
+	if (conn) {
+		string username = msclr::interop::marshal_as<std::string>(number_textbox->Text);
+		string password = msclr::interop::marshal_as<std::string>(password_textbox->Text);
+		string user_query = "INSERT INTO users( \
+		extension, password, name, voicemail, ringtimer, noanswer, recording,\
+		outboundcid, sipname, noanswer_cid, busy_cid, chanunavail_cid,\
+		noanswer_dest, busy_dest, chanunavail_dest, mohclass)\
+		VALUES(\
+		'"+username+"', '', '"+username+"', 'novm', '0', '', '', '"+username+"',\
+		'', '', '', '', '', '', '', 'default'\
+		);";
+
+		string device_query = "INSERT INTO devices (\
+		id, tech, dial, devicetype, user, description, emergency_cid)\
+		VALUES('" + username + "', 'sip', 'SIP/" + username + "', 'fixed', '" + username + "', '" + username + "', '');";
+
+		string sip_query = "INSERT INTO sip (id, keyword, data, flags)\
+			VALUES\
+			('" + username + "', 'secret', '" + password + "', 2), \
+			('" + username + "', 'dtmfmode', 'rfc2833', 3),\
+			('" + username + "', 'canreinvite', 'no', 4),\
+			('" + username + "', 'context', 'from-internal', 5),\
+			('" + username + "', 'host', 'dynamic', 6),\
+			('" + username + "', 'defaultuser', '', 7),\
+			('" + username + "', 'trustrpid', 'yes', 8),\
+			('" + username + "', 'sendrpid', 'pai', 9),\
+			('" + username + "', 'type', 'friend', 10),\
+			('" + username + "', 'sessiontimers', 'accept', 11),\
+			('" + username + "', 'nat', 'no', 12),\
+			('" + username + "', 'port', '5060', 13),\
+			('" + username + "', 'qualify', 'yes', 14),\
+			('" + username + "', 'qualifyfreq', '60', 15),\
+			('" + username + "', 'transport', 'udp,tcp,tls', 16),\
+			('" + username + "', 'avpf', 'no', 17),\
+			('" + username + "', 'force_avp', 'no', 18),\
+			('" + username + "', 'icesupport', 'no', 19),\
+			('" + username + "', 'rtcp_mux', 'no', 20),\
+			('" + username + "', 'encryption', 'no', 21),\
+			('" + username + "', 'videosupport', 'inherit', 22),\
+			('" + username + "', 'namedcallgroup', '', 23),\
+			('" + username + "', 'namedpickupgroup', '', 24),\
+			('" + username + "', 'disallow', '', 25),\
+			('" + username + "', 'allow', '', 26),\
+			('" + username + "', 'dial', 'SIP/" + username + "', 27),\
+			('" + username + "', 'accountcode', '', 28),\
+			('" + username + "', 'deny', '0.0.0.0/0.0.0.0', 29),\
+			('" + username + "', 'permit', '0.0.0.0/0.0.0.0', 30),\
+			('" + username + "', 'secretorigional', '', 31),\
+			('" + username + "', 'sipdriver', 'chan_sip', 32),\
+			('" + username + "', 'account', '"+username+"', 33),\
+			('" + username + "', 'callerid', '"+username+" <"+username+">', 34);";
+		std::cout << sip_query << std::endl;
+		const char* q = user_query.c_str();
+		qstate = mysql_query(conn, q);
+		if (!qstate) {
+			std::cout<<"User inserted sucessfully" << std::endl;
+		}
+		else {
+			std::cout<<"Dupa"<<std::endl;
+		}
+		q = device_query.c_str();
+		qstate = mysql_query(conn, q);
+		if (!qstate) {
+			std::cout << "Device inserted sucessfully" << std::endl;
+		}
+		else {
+			std::cout << "Dupa" << std::endl;
+		}
+		q = sip_query.c_str();
+		qstate = mysql_query(conn, q);
+		if (!qstate) {
+			std::cout << "Sip info inserted sucessfully" << std::endl;
+		}
+		else {
+			std::cout << "Dupa" << std::endl;
+		}
+	}
+	else
+	{
+		std::cout << "failed" << std::endl;
+	}
+
+
+}
 };
 
 }

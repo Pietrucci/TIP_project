@@ -75,8 +75,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>D:\trunk\pjsip\include;D:\trunk\pjmedia\include;D:\trunk\pjnath\include;D:\trunk\pjlib-util\include;D:\trunk\pjlib\include;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\trunk\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\Artur\Desktop\trunk\pjsip\include;C:\Users\Artur\Desktop\trunk\pjmedia\include;C:\Users\Artur\Desktop\trunk\pjnath\include;C:\Users\Artur\Desktop\trunk\pjlib-util\include;C:\Users\Artur\Desktop\trunk\pjlib\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\Artur\Desktop\trunk\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -86,6 +86,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>C:\Program Files\MySQL\MySQL Connector C++ 8.0\include;C:\Program Files\MySQL\MySQL Server 8.0\include;C:\Users\Artur\Desktop\trunk\pjsip\include;C:\Users\Artur\Desktop\trunk\pjnath\include;C:\Users\Artur\Desktop\trunk\pjmedia\include;C:\Users\Artur\Desktop\trunk\pjlib-util\include;C:\Users\Artur\Desktop\trunk\pjlib\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\Artur\Desktop\trunk\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -93,11 +95,13 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <AdditionalIncludeDirectories>C:\Program Files\MySQL\MySQL Server 8.0\include;C:\Program Files\MySQL\Connector C++ 8.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalDependencies>libpjproject-i386-Win32-vc14-Debug-Dynamic.lib;wsock32.lib;mswsock.lib;ws2_32.lib;ole32.lib;dsound.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <EntryPointSymbol>Main</EntryPointSymbol>
+      <AdditionalLibraryDirectories>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86;C:\Program Files %28x86%29\Windows Kits\10\Lib\10.0.18362.0\um\x86;C:\Users\Artur\Desktop\trunk\pjsip\lib;C:\Users\Artur\Desktop\trunk\pjmedia\lib;C:\Users\Artur\Desktop\trunk\pjnath\lib;C:\Users\Artur\Desktop\trunk\pjlib-util\lib;C:\Users\Artur\Desktop\trunk\lib;C:\Users\Artur\Desktop\trunk\pjlib\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -123,9 +127,13 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Program Files\MySQL\MySQL Connector C 6.1\include;C:\Program Files\MySQL\Connector C++ 8.0\include;C:\Program Files\MySQL\MySQL Server 8.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalDependencies />
+      <AdditionalDependencies>libpjproject-x86_64-x64-vc14-Release-Dynamic.lib;wsock32.lib;mswsock.lib;ws2_32.lib;ole32.lib;dsound.lib;mysqlcppconn.lib;libmysql.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Program Files\MySQL\MySQL Connector C++ 8.0\lib64\vs14;C:\Program Files\MySQL\MySQL Connector C++ 8.0\lib64;C:\Program Files\MySQL\MySQL Server 8.0\lib;C:\Users\Artur\Desktop\trunk\pjsip\lib;C:\Users\Artur\Desktop\trunk\pjnath\lib;C:\Users\Artur\Desktop\trunk\pjmedia\lib;C:\Users\Artur\Desktop\trunk\pjlib\lib;C:\Users\Artur\Desktop\trunk\pjlib-util\lib;C:\Users\Artur\Desktop\trunk\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <SubSystem>Windows</SubSystem>
+      <EntryPointSymbol>Main</EntryPointSymbol>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
