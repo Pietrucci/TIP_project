@@ -973,7 +973,6 @@ private: System::Void create_button_Click(System::Object^ sender, System::EventA
 	string ip_address = server.substr(0,server.find(":"));
 	const char* server_name = ip_address.c_str();
 	MYSQL* conn;
-	MYSQL_ROW row;
 	MYSQL_RES* res;
 	conn = mysql_init(0);
 	conn = mysql_real_connect(conn,server_name , "test", "adminadmin", "asterisk", 3306, NULL,0);
@@ -981,85 +980,80 @@ private: System::Void create_button_Click(System::Object^ sender, System::EventA
 	if (conn) {
 		string username = msclr::interop::marshal_as<std::string>(number_textbox->Text);
 		string password = msclr::interop::marshal_as<std::string>(password_textbox->Text);
-		string user_query = "INSERT INTO users( \
-		extension, password, name, voicemail, ringtimer, noanswer, recording,\
-		outboundcid, sipname, noanswer_cid, busy_cid, chanunavail_cid,\
-		noanswer_dest, busy_dest, chanunavail_dest, mohclass)\
-		VALUES(\
-		'"+username+"', '', '"+username+"', 'novm', '0', '', '', '"+username+"',\
-		'', '', '', '', '', '', '', 'default'\
-		);";
 
-		string device_query = "INSERT INTO devices (\
-		id, tech, dial, devicetype, user, description, emergency_cid)\
-		VALUES('" + username + "', 'sip', 'SIP/" + username + "', 'fixed', '" + username + "', '" + username + "', '');";
+		string query = "SELECT * FROM users where extension = '"+username+"';";
+		
+		const char* q = query.c_str();
+		qstate = mysql_query(conn, q);
+		res = mysql_store_result(conn);
+		int number_of_rows = mysql_num_rows(res);
+		if (number_of_rows == 0) {
+			string user_query = "INSERT INTO users( \
+			extension, password, name, voicemail, ringtimer, noanswer, recording,\
+			outboundcid, sipname, noanswer_cid, busy_cid, chanunavail_cid,\
+			noanswer_dest, busy_dest, chanunavail_dest, mohclass)\
+			VALUES(\
+			'"+username+"', '', '"+username+"', 'novm', '0', '', '', '"+username+"',\
+			'', '', '', '', '', '', '', 'default'\
+			);";
 
-		string sip_query = "INSERT INTO sip (id, keyword, data, flags)\
-			VALUES\
-			('" + username + "', 'secret', '" + password + "', 2), \
-			('" + username + "', 'dtmfmode', 'rfc2833', 3),\
-			('" + username + "', 'canreinvite', 'no', 4),\
-			('" + username + "', 'context', 'from-internal', 5),\
-			('" + username + "', 'host', 'dynamic', 6),\
-			('" + username + "', 'defaultuser', '', 7),\
-			('" + username + "', 'trustrpid', 'yes', 8),\
-			('" + username + "', 'sendrpid', 'pai', 9),\
-			('" + username + "', 'type', 'friend', 10),\
-			('" + username + "', 'sessiontimers', 'accept', 11),\
-			('" + username + "', 'nat', 'no', 12),\
-			('" + username + "', 'port', '5060', 13),\
-			('" + username + "', 'qualify', 'yes', 14),\
-			('" + username + "', 'qualifyfreq', '60', 15),\
-			('" + username + "', 'transport', 'udp,tcp,tls', 16),\
-			('" + username + "', 'avpf', 'no', 17),\
-			('" + username + "', 'force_avp', 'no', 18),\
-			('" + username + "', 'icesupport', 'no', 19),\
-			('" + username + "', 'rtcp_mux', 'no', 20),\
-			('" + username + "', 'encryption', 'no', 21),\
-			('" + username + "', 'videosupport', 'inherit', 22),\
-			('" + username + "', 'namedcallgroup', '', 23),\
-			('" + username + "', 'namedpickupgroup', '', 24),\
-			('" + username + "', 'disallow', '', 25),\
-			('" + username + "', 'allow', '', 26),\
-			('" + username + "', 'dial', 'SIP/" + username + "', 27),\
-			('" + username + "', 'accountcode', '', 28),\
-			('" + username + "', 'deny', '0.0.0.0/0.0.0.0', 29),\
-			('" + username + "', 'permit', '0.0.0.0/0.0.0.0', 30),\
-			('" + username + "', 'secretorigional', '', 31),\
-			('" + username + "', 'sipdriver', 'chan_sip', 32),\
-			('" + username + "', 'account', '"+username+"', 33),\
-			('" + username + "', 'callerid', '"+username+" <"+username+">', 34);";
-		std::cout << sip_query << std::endl;
-		const char* q = user_query.c_str();
-		qstate = mysql_query(conn, q);
-		if (!qstate) {
-			std::cout<<"User inserted sucessfully" << std::endl;
+			string device_query = "INSERT INTO devices (\
+			id, tech, dial, devicetype, user, description, emergency_cid)\
+			VALUES('" + username + "', 'sip', 'SIP/" + username + "', 'fixed', '" + username + "', '" + username + "', '');";
+
+			string sip_query = "INSERT INTO sip (id, keyword, data, flags)\
+				VALUES\
+				('" + username + "', 'secret', '" + password + "', 2), \
+				('" + username + "', 'dtmfmode', 'rfc2833', 3),\
+				('" + username + "', 'canreinvite', 'no', 4),\
+				('" + username + "', 'context', 'from-internal', 5),\
+				('" + username + "', 'host', 'dynamic', 6),\
+				('" + username + "', 'defaultuser', '', 7),\
+				('" + username + "', 'trustrpid', 'yes', 8),\
+				('" + username + "', 'sendrpid', 'pai', 9),\
+				('" + username + "', 'type', 'friend', 10),\
+				('" + username + "', 'sessiontimers', 'accept', 11),\
+				('" + username + "', 'nat', 'no', 12),\
+				('" + username + "', 'port', '5060', 13),\
+				('" + username + "', 'qualify', 'yes', 14),\
+				('" + username + "', 'qualifyfreq', '60', 15),\
+				('" + username + "', 'transport', 'udp,tcp,tls', 16),\
+				('" + username + "', 'avpf', 'no', 17),\
+				('" + username + "', 'force_avp', 'no', 18),\
+				('" + username + "', 'icesupport', 'no', 19),\
+				('" + username + "', 'rtcp_mux', 'no', 20),\
+				('" + username + "', 'encryption', 'no', 21),\
+				('" + username + "', 'videosupport', 'inherit', 22),\
+				('" + username + "', 'namedcallgroup', '', 23),\
+				('" + username + "', 'namedpickupgroup', '', 24),\
+				('" + username + "', 'disallow', '', 25),\
+				('" + username + "', 'allow', '', 26),\
+				('" + username + "', 'dial', 'SIP/" + username + "', 27),\
+				('" + username + "', 'accountcode', '', 28),\
+				('" + username + "', 'deny', '0.0.0.0/0.0.0.0', 29),\
+				('" + username + "', 'permit', '0.0.0.0/0.0.0.0', 30),\
+				('" + username + "', 'secretorigional', '', 31),\
+				('" + username + "', 'sipdriver', 'chan_sip', 32),\
+				('" + username + "', 'account', '"+username+"', 33),\
+				('" + username + "', 'callerid', '"+username+" <"+username+">', 34);";
+			q = user_query.c_str();
+			qstate = mysql_query(conn, q);
+
+			q = device_query.c_str();
+			qstate = mysql_query(conn, q);
+
+			q = sip_query.c_str();
+			qstate = mysql_query(conn, q);
+			
 		}
 		else {
-			std::cout<<"Dupa"<<std::endl;
-		}
-		q = device_query.c_str();
-		qstate = mysql_query(conn, q);
-		if (!qstate) {
-			std::cout << "Device inserted sucessfully" << std::endl;
-		}
-		else {
-			std::cout << "Dupa" << std::endl;
-		}
-		q = sip_query.c_str();
-		qstate = mysql_query(conn, q);
-		if (!qstate) {
-			std::cout << "Sip info inserted sucessfully" << std::endl;
-		}
-		else {
-			std::cout << "Dupa" << std::endl;
+			MessageBox::Show(gcnew String("Account already taken"));
 		}
 	}
-	else
-	{
-		std::cout << "failed" << std::endl;
-	}
+	else {
+		MessageBox::Show(gcnew String("Wrong server address"));
 
+	}
 
 }
 };

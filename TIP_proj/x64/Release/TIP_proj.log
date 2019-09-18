@@ -1,1 +1,3 @@
-﻿  TIP_proj.vcxproj -> C:\Users\Artur\source\repos\TIP\x64\Release\TIP_proj.exe
+﻿  LoginWindow.cpp
+C:\Users\Artur\source\repos\TIP\TIP_proj\LoginWindow.h(989,22): warning C4244:  'initializing': conversion from 'my_ulonglong' to 'int', possible loss of data
+  TIP_proj.vcxproj -> C:\Users\Artur\source\repos\TIP\x64\Release\TIP_proj.exe
