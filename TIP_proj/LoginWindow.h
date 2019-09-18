@@ -903,7 +903,7 @@ namespace TIPproj {
 				prm.opt.audioCount = 0;
 				prm.opt.flag = pjsua_call_flag::PJSUA_CALL_UNHOLD;
 				try {
-					call->reinvite(prm);
+					pjsua_call_reinvite(call->getId(), prm.opt.flag, NULL);
 				}
 				catch (...) {
 
