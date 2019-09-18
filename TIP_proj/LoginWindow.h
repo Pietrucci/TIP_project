@@ -10,6 +10,8 @@
 #include <algorithm>
 #include <functional>
 #include <iostream>
+#include <fstream>
+
 int qstate;
 
 namespace TIPproj {
@@ -228,7 +230,7 @@ namespace TIPproj {
 				 this->password_textbox->Location = System::Drawing::Point(234, 25);
 				 this->password_textbox->MaxLength = 32;
 				 this->password_textbox->Name = L"password_textbox";
-				 this->password_textbox->PasswordChar = '•';
+				 this->password_textbox->PasswordChar = 'Â•';
 				 this->password_textbox->Size = System::Drawing::Size(100, 22);
 				 this->password_textbox->TabIndex = 5;
 				 this->password_textbox->Text = L"12345";
@@ -730,6 +732,19 @@ namespace TIPproj {
 			connection_status_label->ForeColor = Color::ForestGreen;
 			connected_group->Visible = true;
 		}
+		
+		std::ifstream fin;
+		std::string line;
+		fin.open(number + ".txt", std::ios_base::app);
+		while (getline(fin, line)) {
+			if (line != "") {
+				TreeNode^ new_node = gcnew TreeNode(gcnew String(line.c_str()));
+				new_node->ContextMenuStrip = buddy_context_menu;
+				buddy_tree->Nodes->Add(new_node);
+				AppAddBuddy(gcnew String(line.c_str()), false);
+			}
+		}
+		
 	}
 
 	public: void AppMakeCall() {
@@ -747,7 +762,7 @@ namespace TIPproj {
 		ep.hangupAllCalls();
 	}
 
-	public: void AppAddBuddy(String^ number) {
+	public: void AppAddBuddy(String^ number, boolean save) {
 		BuddyConfig cfg;
 
 		string server = msclr::interop::marshal_as<std::string>(server_textbox->Text);
@@ -764,6 +779,16 @@ namespace TIPproj {
 		}
 		finally{
 			acc->buddies.push_back(buddy);
+		if (save) {
+			std::string user_info = acc->getInfo().uri;
+			user_info = user_info.substr(4);
+			user_info = user_info.substr(0, user_info.find("@", 0));
+
+			std::ofstream file;
+			file.open(user_info + ".txt", std::ios_base::app);
+			file << number_string << "\n";
+			file.close();
+		}
 		}
 
 	}
@@ -787,6 +812,29 @@ namespace TIPproj {
 				delete buddy;
 			}
 		}
+		
+				std::string user_info = acc->getInfo().uri;
+		user_info = user_info.substr(4);
+		user_info = user_info.substr(0, user_info.find("@", 0));
+
+		std::ifstream fin;
+		fin.open(user_info + ".txt", std::ios_base::app);
+		std::ofstream temp;
+		temp.open("temp.txt");
+		std::string deleteline = number_string;
+		std::string line;
+		while (getline(fin, line)) {
+			if (line != deleteline) {
+				temp << line << std::endl;
+			}
+
+		}
+
+		temp.close();
+		fin.close();
+		std::string to_remove = user_info + ".txt";
+		std::remove(to_remove.c_str());
+		std::rename("temp.txt", to_remove.c_str());
 	}
 
 	private: void ApplicationConnect() {
